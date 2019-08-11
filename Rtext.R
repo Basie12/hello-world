@@ -5,5 +5,4 @@
  2. chealse
  3. spurs
  4. arsenal
- 5. liverpool
- 6. newcastel
+ 
