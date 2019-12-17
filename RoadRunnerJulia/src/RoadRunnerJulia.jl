@@ -1250,7 +1250,7 @@ end
 ## Attention Returns Null
 """"
     getGlobalParameterIds(rr::Ptr{Nothing})
-Obtain the list of global parameter Ids. 
+Obtain the list of global parameter Ids.
 """
 function getGlobalParameterIds(rr::Ptr{Nothing})
   data = ccall(dlsym(rrlib, :getGlobalParameterIds), cdecl, Ptr{RRStringArray}, (Ptr{Nothing},), rr)
@@ -1271,7 +1271,10 @@ end
 ###############################################################################
 #                              Compartment Group                              #
 ###############################################################################
-
+""""
+    getCompartmentByIndex(rr::Ptr{Nothing}, index::Int64)
+Retrieve the compartment volume for a particular compartment.
+"""
 function getCompartmentByIndex(rr::Ptr{Nothing}, index::Int64)
   value = Array{Float64}(undef,1)
   status = ccall(dlsym(rrlib :getCompartmentByIndex), cdecl, Bool, (Ptr{Nothing}, Int64, Ptr{Float64}), rr, index, value)
@@ -1280,7 +1283,10 @@ function getCompartmentByIndex(rr::Ptr{Nothing}, index::Int64)
   end
   return value[1]
 end
-
+""""
+    setCompartmentByIndex(rr::Ptr{Nothing}, index::Int64, value::Float64)
+Set the volume for a particular compartment.
+"""
 function setCompartmentByIndex(rr::Ptr{Nothing}, index::Int64, value::Float64)
   status = ccall(dlsym(rrlib, :setCompartmentByIndex), cdecl, Bool, (Ptr{Nothing}, Int64, Float64), rr, index, value)
   if status == false
@@ -1288,10 +1294,19 @@ function setCompartmentByIndex(rr::Ptr{Nothing}, index::Int64, value::Float64)
   end
 end
 
+""""
+    getNumberOfCompartments(rr::Ptr{Nothing})
+Returns the number of compartments in the model.
+"""
 function getNumberOfCompartments(rr::Ptr{Nothing})
   return ccall(dlsym(rrlib, :getNumberOfCompartments), cdecl, Int64, (Ptr{Nothing},), rr)
 end
 
+""""
+    getCompartmentIds(rr::Ptr{Nothing})
+Obtain the list of compartment Ids.
+Example: str = getCompartmentIds (RRHandle handle);
+"""
 function getCompartmentIds(rr::Ptr{Nothing})
   data = ccall(dlsym(rrlib, :getCompartmentIds), cdecl, Ptr{RRStringArray}, (Ptr{Nothing},), rr)
   compartmentIds = String[]
