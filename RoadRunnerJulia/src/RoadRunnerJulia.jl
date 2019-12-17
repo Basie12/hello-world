@@ -840,10 +840,19 @@ end
 ###############################################################################
 #                               Reaction Group                                #
 ###############################################################################
+
+"""
+    getNumberOfReactions(rr::Ptr{Nothing})
+Obtain the number of reactions in the loaded model. Example: number = getNumberOfReactions (RRHandle handle);
+"""
 function getNumberOfReactions(rr::Ptr{Nothing})
   return ccall(dlsym(rrlib, :getNumberOfReactions), cdecl, Int64, (Ptr{Nothing},), rr)
 end
 
+"""
+    getReactionRate(rr::Ptr{Nothing}, idx::Int64)
+Retrieve a give reaction rate as indicated by the index paramete.
+"""
 function getReactionRate(rr::Ptr{Nothing}, idx::Int64)
   value = Array{Float64}(undef,1)
   status = ccall(dlsym(rrlib, :getReactionRate), cdecl, Bool, (Ptr{Nothing}, Int64, Ptr{Float64}), rr, rateNr, value)
@@ -854,16 +863,32 @@ function getReactionRate(rr::Ptr{Nothing}, idx::Int64)
 end
 
 ### RRVector Helper
+## Attention Returns NUll
+"""
+    getReactionRates(rr::Ptr{Nothing})
+Retrieve a vector of reaction rates as determined by the current state of the model.
+"""
 function getReactionRates(rr::Ptr{Nothing})
   return ccall(dlsym(rrlib, :getReactionRates), cdecl, Ptr{RRVector}, (Ptr{Nothing},), rr)
 end
 
 ### RRVector Helper
+## Attention Returns Null
+
+"""
+    getReactionRatesEx(rr::Ptr{Nothing}, vec::Ptr{RRVector})
+Retrieve a vector of reaction rates given a vector of species concentrations.
+"""
 function getReactionRatesEx(rr::Ptr{Nothing}, vec::Ptr{RRVector})
   return_vec = call(dlsym(rrlib, :getReactionRatesEx), cdecl, Ptr{RRVector}, (Ptr{Nothing}, Ptr{RRVector}), rr, vec)
   return return_vec
 end
 
+## Attention Returns Null
+"""
+    getReactionIds(rr::Ptr{Nothing})
+Obtain the list of reaction Ids.
+"""
 function getReactionIds(rr::Ptr{Nothing})
   data = ccall(dlsym(rrlib, :getReactionIds), cdecl, Ptr{Nothing}, (Ptr{Nothing},), rr)
   num_rxns = getNumberOfReactions(rr)
