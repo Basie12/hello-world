@@ -962,10 +962,19 @@ end
 ###############################################################################
 
 ## RRVectorHelper
+## Attention Returns False
+""""
+    getBoundarySpeciesConcentrations(rr::Ptr{Nothing})
+Retrieve the concentration for a particular floating species.
+"""
 function getBoundarySpeciesConcentrations(rr::Ptr{Nothing})
   return ccall(dlsym(rrlib, :getBoundarySpeciesConcentrations), cdecl, Ptr{RRVector}, (Ptr{Nothing},), rr)
 end
 
+""""
+    setBoundarySpeciesByIndex(rr::Ptr{Nothing}, index::Int64, value::Float64)
+Set the concentration for a particular boundary species.
+"""
 function setBoundarySpeciesByIndex(rr::Ptr{Nothing}, index::Int64, value::Float64)
   status = ccall(dlsym(rrlib, :setBoundarySpeciesByIndex), cdecl, Bool, (Ptr{Nothing}, Int64, Float64), rr, index, value)
   if status == false
@@ -973,6 +982,10 @@ function setBoundarySpeciesByIndex(rr::Ptr{Nothing}, index::Int64, value::Float6
   end
 end
 
+""""
+    getBoundarySpeciesByIndex(rr::Ptr{Nothing}, index::Int64)
+Retrieve the concentration for a particular floating species.
+"""
 function getBoundarySpeciesByIndex(rr::Ptr{Nothing}, index::Int64)
   value = Array{Float64}(undef,1)
   status = ccall(dlsym(rrlib, :getBoundarySpeciesByIndex), cdecl, Bool, (Ptr{Nothing}, Int64, Ptr{Float64}), rr, index, value)
@@ -983,17 +996,33 @@ function getBoundarySpeciesByIndex(rr::Ptr{Nothing}, index::Int64)
 end
 
 ## RRVectorHelper
+""""
+    setBoundarySpeciesConcentrations(rr::Ptr{Nothing}, vec::Ptr{RRVector})
+Set the boundary species concentration to the vector vec.
+Example:
+    1 myVector = createVector (getNumberOfBoundarySpecies(RRHandle handle));
+    2 setVectorElement (myVector, 0, 1.2);
+    3 setVectorElement (myVector, 1, 5.7);
+    4 setVectorElement (myVector, 2, 3.4);
+    5 setBoundarySpeciesConcentrations(myVector);
+"""
 function setBoundarySpeciesConcentrations(rr::Ptr{Nothing}, vec::Ptr{RRVector})
   status = ccall(dlsym(rrlib, :setFloatingSpeciesInitialConcentrations), cdecl, Bool, (Ptr{Nothing}, Ptr{RRVector}), rr, vec)
   if status == false
     error(getLastError())
   end
-end
-
+""""
+    getNumberOfBoundarySpecies(rr::Ptr{Nothing})
+Returns the number of boundary species in the model.
+"""
 function getNumberOfBoundarySpecies(rr::Ptr{Nothing})
   return ccall(dlsym(rrlib, :getNumberOfBoundarySpecies), cdecl, Int64, (Ptr{Nothing},), rr)
 end
-
+## Attention Returns Null
+""""
+    getBoundarySpeciesIds(rr::Ptr{Nothing})
+Obtain the list of boundary species Ids.
+"""
 function getBoundarySpeciesIds(rr::Ptr{Nothing})
   data = ccall(dlsym(rrlib, :getBoundarySpeciesIds), cdecl, Ptr{RRStringArray}, (Ptr{Nothing},), rr)
   b_species = String[]
