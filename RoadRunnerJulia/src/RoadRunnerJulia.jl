@@ -910,16 +910,32 @@ end
 ###############################################################################
 
 
-### RRVector Helper
+### RRVector
+## Attention Returns False
+"""
+    getRatesOfChange(rr::Ptr{Nothing})
+RRetrieve the vector of rates of change as determined by the current state of the model.
+Example: values = getRatesOfChange (RRHandle handle);
+"""
 function getRatesOfChange(rr::Ptr{Nothing})
   return ccall(dlsym(rrlib, :getRatesOfChange), cdecl, Ptr{RRVector}, (Ptr{Nothing},), rr)
 end
 
 ### RRVector Helper
+"""
+    getRatesOfChange(rr::Ptr{Nothing})
+Retrieve the rate of change for a given floating species.
+Example: status = getRateOfChange (&index, *value);
+"""
 function getRatesOfChangeIds(rr::Ptr{Nothing})
   return ccall(dlsym(rrlib, :getRatesOfChangeIds), cdecl, Ptr{RRStringArray}, (Ptr{Nothing},), rr)
 end
 
+"""
+    getRatesOfChange(rr::Ptr{Nothing})
+Retrieve the rate of change for a given floating species.
+Example: status = getRateOfChange (&index, *value);
+"""
 function getRateOfChange(rr::Ptr{Nothing}, index::Int64)
   value = Array{Float64}(undef,1)
   status = ccall(dlsym(rrlib :getRateOfChange), cdecl, Bool, (Ptr{Nothing}, Int64, Ptr{Float64}), rr, inde, value)
@@ -930,6 +946,13 @@ function getRateOfChange(rr::Ptr{Nothing}, index::Int64)
 end
 
 ## RRVector Helper
+## Attention Returns Null
+
+"""
+    getRatesOfChangeEx(rr::Ptr{Nothing}, vec::Ptr{RRVector})
+Retrieve the vector of rates of change given a vector of floating species concentrations.
+Example: values = getRatesOfChangeEx (vector);
+"""
 function getRatesOfChangeEx(rr::Ptr{Nothing}, vec::Ptr{RRVector})
   return ccall(dlsym(rrlib, :getRatesOfChangeEx), cdecl, Ptr{Nothing}, (Ptr{Nothing}, Ptr{RRVector}), rr, vec)
 end
