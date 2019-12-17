@@ -1207,17 +1207,30 @@ end
 ###############################################################################
 
 ## RRVectorHelper
+## Attention Returns False
+""""
+    getGlobalParameterValues(rr::Ptr{Nothing})
+Retrieve the global parameter value.
+Example: RRVectorPtr values = getGlobalParameterValues (void);
+"""
 function getGlobalParameterValues(rr::Ptr{Nothing})
   return ccall(dlsym(rrlib, :getGlobalParameterValues), cdecl, Ptr{RRVector}, (Ptr{Nothing},), rr)
 end
 
+""""
+    setGlobalParameterByIndex(rr::Ptr{Nothing}, index::Int64, value::Float64)
+Set the value for a particular global parameter.
+"""
 function setGlobalParameterByIndex(rr::Ptr{Nothing}, index::Int64, value::Float64)
   status = ccall(dlsym(rrlib, :setGlobalParameterByIndex), cdecl, Bool, (Ptr{Nothing}, Int64, Float64), rr, index, value)
   if status == false
     error(getLastError())
   end
 end
-
+""""
+    getGlobalParameterByIndex(rr::Ptr{Nothing}, index::Int64)
+Retrieve the global parameter value.
+"""
 function getGlobalParameterByIndex(rr::Ptr{Nothing}, index::Int64)
   value = Array{Float64}(undef,1)
   status = ccall(dlsym(rrlib, :getGlobalParameterByIndex ), cdecl, Bool, (Ptr{Nothing}, Int64, Ptr{Float64}), rr, index, value)
@@ -1226,11 +1239,19 @@ function getGlobalParameterByIndex(rr::Ptr{Nothing}, index::Int64)
   end
   return value[1]
 end
-
+""""
+    getNumberOfGlobalParameters(rr::Ptr{Nothing})
+Returns the number of global parameters in the model.
+"""
 function getNumberOfGlobalParameters(rr::Ptr{Nothing})
   return ccall(dlsym(rrlib, :getNumberOfGlobalParameters), cdecl, Int64, (Ptr{Nothing},), rr)
 end
 
+## Attention Returns Null
+""""
+    getGlobalParameterIds(rr::Ptr{Nothing})
+Obtain the list of global parameter Ids. 
+"""
 function getGlobalParameterIds(rr::Ptr{Nothing})
   data = ccall(dlsym(rrlib, :getGlobalParameterIds), cdecl, Ptr{RRStringArray}, (Ptr{Nothing},), rr)
   global_params = String[]
