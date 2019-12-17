@@ -1168,6 +1168,11 @@ end
 #                           Intial Conditions Group                           #
 ###############################################################################
 
+""""
+    setFloatingSpeciesInitialConcentrations(rr::Ptr{Nothing}, vec::Ptr{RRVector})
+Set the initial floating species concentrations.
+Example: status = setFloatingSpeciesInitialConcentrations (vec);
+"""
 function setFloatingSpeciesInitialConcentrations(rr::Ptr{Nothing}, vec::Ptr{RRVector})
   status = ccall(dlsym(rrlib, :setFloatingSpeciesInitialConcentrations), cdecl, Bool, (Ptr{Nothing}, Ptr{RRVector}), rr, vec)
   if status == false
@@ -1176,11 +1181,22 @@ function setFloatingSpeciesInitialConcentrations(rr::Ptr{Nothing}, vec::Ptr{RRVe
 end
 
 ## RRVectorHelper
+## Attention Returns Null
+""""
+    getFloatingSpeciesInitialConcentrations(rr::Ptr{Nothing})
+Get the initial floating species concentrations.
+Example: vec = getFloatingSpeciesInitialConcentrations (RRHandle handle);
+"""
 function getFloatingSpeciesInitialConcentrations(rr::Ptr{Nothing})
   return ccall(dlsym(rrlib, :getFloatingSpeciesInitialConcentrations), cdecl, Ptr{RRVector}, (Ptr{Nothing},), rr)
 end
-
 ## RRStringArrayHelper
+## Attention Returns Null
+""""
+    getFloatingSpeciesInitialConditionIds(rr::Ptr{Nothing})
+Get the initial floating species Ids.
+Example: vec = getFloatingSpeciesInitialConditionIds (RRHandle handle);
+"""
 function getFloatingSpeciesInitialConditionIds(rr::Ptr{Nothing})
   data = ccall(dlsym(rrlib, :getFloatingSpeciesInitialConditionIds), cdecl, Ptr{RRStringArray}, (Ptr{Nothing},), rr)
   return data
