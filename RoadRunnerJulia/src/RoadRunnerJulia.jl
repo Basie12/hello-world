@@ -1043,10 +1043,20 @@ end
 ###############################################################################
 
 ## RRVectorHelper
+
+""""
+    getFloatingSpeciesConcentrations(rr::Ptr{Nothing})
+Retrieve in a vector the concentrations for all the floating species.
+Example:  RVectorPtr values = getFloatingSpeciesConcentrations (void);
+"""
 function getFloatingSpeciesConcentrations(rr::Ptr{Nothing})
   return ccall(dlsym(rrlib, :getFloatingSpeciesConcentrations), cdecl, Ptr{RRVector}, (Ptr{Nothing},), rr)
 end
 
+""""
+    setFloatingSpeciesInitialConcentrationByIndex(rr::Ptr{Nothing}, index::Int64, value::Float64)
+Set the initial concentration for a particular floating species.
+"""
 function setFloatingSpeciesInitialConcentrationByIndex(rr::Ptr{Nothing}, index::Int64, value::Float64)
   status = call(dlsym(rrlib, :setFloatingSpeciesInitialConcentrationByIndex), cdecl, Bool, (Ptr{Nothing}, Int64, Float64), rr, index, value)
   if status == false
@@ -1054,6 +1064,11 @@ function setFloatingSpeciesInitialConcentrationByIndex(rr::Ptr{Nothing}, index::
   end
 end
 
+## Attention Returns False
+""""
+    getFloatingSpeciesInitialConcentrationByIndex(rr::Ptr{Nothing}, index::Int64)
+Get the initial concentration for a particular floating species.
+"""
 function getFloatingSpeciesInitialConcentrationByIndex(rr::Ptr{Nothing}, index::Int64)
   value = Array{Floating64}(undef,1)
   status = ccall(dlsym(rrlib, :getFloatingSpeciesInitialConcentrationByIndex), cdecl, Bool, (Ptr{Nothing}, Int64, Ptr{Float64}), rr, index, value)
@@ -1063,6 +1078,10 @@ function getFloatingSpeciesInitialConcentrationByIndex(rr::Ptr{Nothing}, index::
   return value[1]
 end
 
+""""
+    setFloatingSpeciesByIndex(rr::Ptr{Nothing}, index::Int64, value::Float64)
+Set the concentration for a particular floating species.
+"""
 function setFloatingSpeciesByIndex(rr::Ptr{Nothing}, index::Int64, value::Float64)
   status = ccall(dlsym(rrlib, :setFloatingSpeciesByIndex), cdecl, Bool, (Ptr{Nothing}, Int64, Float64), rr, index, value)
   if status == false
@@ -1070,6 +1089,11 @@ function setFloatingSpeciesByIndex(rr::Ptr{Nothing}, index::Int64, value::Float6
   end
 end
 
+## Attention Returns False
+""""
+    getFloatingSpeciesByIndex(rr::Ptr{Nothing}, index::Int64)
+Retrieve the concentration for a particular floating species.
+"""
 function getFloatingSpeciesByIndex(rr::Ptr{Nothing}, index::Int64)
   value = Array{Float64}(undef,1)
   status = ccall(dlsym(rrlib, :getFloatingSpeciesByIndex ), cdecl, Bool, (Ptr{Nothing}, Int64, Ptr{Float64}), rr, index, value)
@@ -1078,7 +1102,16 @@ function getFloatingSpeciesByIndex(rr::Ptr{Nothing}, index::Int64)
   end
   return value[1]
 end
-
+""""
+    setFloatingSpeciesConcentrations(rr::Ptr{Nothing}, vec::Ptr{RRVector})
+Set the floating species concentration to the vector vec.
+Example:
+    1 myVector = createVector (getNumberOfFloatingSpecies(RRHandle handle));
+    2 setVectorElement (myVector, 0, 1.2);
+    3 setVectorElement (myVector, 1, 5.7);
+    4 setVectorElement (myVector, 2, 3.4);
+    5 setFloatingSpeciesConcentrations(myVector);
+"""
 function setFloatingSpeciesConcentrations(rr::Ptr{Nothing}, vec::Ptr{RRVector})
   status = ccall(dlsym(rrlib, :setFloatingSpeciesInitialConcentrations), cdecl, Bool, (Ptr{Nothing}, Ptr{RRVector}), rr, vec)
   if status == false
@@ -1086,18 +1119,35 @@ function setFloatingSpeciesConcentrations(rr::Ptr{Nothing}, vec::Ptr{RRVector})
   end
 end
 
+""""
+    getNumberOfFloatingSpecies(rr::Ptr{Nothing})
+Returns the number of floating species in the model.
+"""
 function getNumberOfFloatingSpecies(rr::Ptr{Nothing})
   return ccall(dlsym(rrlib, :getNumberOfFloatingSpecies), cdecl, Int64, (Ptr{Nothing},), rr)
 end
 
+""""
+    getNumberOfDependentSpecies(rr::Ptr{Nothing})
+Returns the number of dependent species in the mode.
+"""
 function getNumberOfDependentSpecies(rr::Ptr{Nothing})
   return ccall(dlsym(rrlib, :getNumberOfDependentSpecies), cdecl, Int64, (Ptr{Nothing},), rr)
 end
 
+""""
+    getNumberOfIndependentSpecies(rr::Ptr{Nothing})
+Returns the number of independent species in the model.
+"""
 function getNumberOfIndependentSpecies(rr::Ptr{Nothing})
   return ccall(dlsym(rrlib, :getNumberOfIndependentSpecies), cdecl, Int64, (Ptr{Nothing},), rr)
 end
 
+## Attention Returns Null
+""""
+    getFloatingSpeciesIds(rr::Ptr{Nothing})
+Obtain the list of floating species Id.
+"""
 function getFloatingSpeciesIds(rr::Ptr{Nothing})
   data = ccall(dlsym(rrlib, :getFloatingSpeciesIds), cdecl, Ptr{RRStringArray}, (Ptr{Nothing},), rr)
   species = String[]
