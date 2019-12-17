@@ -947,7 +947,6 @@ end
 
 ## RRVector Helper
 ## Attention Returns Null
-
 """
     getRatesOfChangeEx(rr::Ptr{Nothing}, vec::Ptr{RRVector})
 Retrieve the vector of rates of change given a vector of floating species concentrations.
